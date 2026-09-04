@@ -1,3 +1,5 @@
+# Activity 2: Update your Profile and add it to the repository
+
 print("============================================")
 print("Welcome here")
 print("My first post!")
@@ -6,6 +8,8 @@ print("============================================")
 username = "cool_creator"
 bio = "Fun Blogger"
 followers = 100
+
+# Activity 3: Follower Growth tracker
 
 print("Username:", username)
 print("Bio:", bio)
