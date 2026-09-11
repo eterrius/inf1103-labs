@@ -5,7 +5,7 @@ while True:
     stock = input("Please enter stock quantity: ")
 
     if stock.isdigit() and int(stock) >= 0:
-        stock = int(stock)
+        inv += int(stock)
 
     else:
         print("Invalid input. Please enter a non-negative integer.")
