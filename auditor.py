@@ -4,7 +4,7 @@ inv = 0
 while True:
     stock = input("Please enter stock quantity: ")
 
-    if stock.isdigit():
+    if stock.isdigit() and int(stock) >= 0:
         stock = int(stock)
 
     else:
