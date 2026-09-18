@@ -1,7 +1,9 @@
+# --- Variables --- #
 inv = 0
 wrong = 0
 
 
+# --- Functions --- #
 def get_valid_input():
     result = input("Please enter stock quantity: ")
 
@@ -15,9 +17,12 @@ def get_valid_input():
         print("Invalid input. Please enter a non-negative integer.")
         return None
 
+
 def process_delivery(current_total, new_value):
     return current_total + new_value
 
+
+# --- Main Program --- #
 while True:
     stock = get_valid_input()
 
