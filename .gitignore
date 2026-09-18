@@ -1,1 +1,4 @@
 log.txt
+*.zip
+Dockerfile
+*.docx
