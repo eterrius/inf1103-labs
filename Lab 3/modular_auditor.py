@@ -30,6 +30,7 @@ def generate_report(total_units, failed_attempts):
     print(f"Total Units Processed: {total_units}")
     print(f"Number of Failed/Rejected Entries: {failed_attempts}")
 
+
 # --- Main Program --- #
 while True:
     stock = get_valid_input()
@@ -47,5 +48,6 @@ while True:
         tax = calculate_tax(cost)
 
     else:
-        generate_report(inv, wrong)
         break
+
+generate_report(inv, wrong)
