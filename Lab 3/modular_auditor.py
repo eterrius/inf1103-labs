@@ -26,6 +26,10 @@ def calculate_tax(amount):
     return amount * 0.10
 
 
+def generate_report(total_units, failed_attempts):
+    print(f"Total Units Processed: {total_units}")
+    print(f"Number of Failed/Rejected Entries: {failed_attempts}")
+
 # --- Main Program --- #
 while True:
     stock = get_valid_input()
@@ -43,6 +47,5 @@ while True:
         tax = calculate_tax(cost)
 
     else:
-        print(f"Total Units Processed: {inv}")
-        print(f"Number of Failed/Rejected Entries: {wrong}")
+        generate_report(inv, wrong)
         break
