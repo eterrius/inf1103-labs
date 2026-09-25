@@ -40,16 +40,20 @@ def read_inventory_from_file(filename):
         return 0
 
 
-def save_inventory(inv, success):
+def save_inventory(inv, success, inv_path):
     with open("inventory.txt", "w") as file:
         file.write(f"{inv}\n{success}")
 
     return
 
 
+# --- Constants --- #
+INV_PATH = "inventory.txt"
+
+
 # --- Variables --- #
 wrong = 0
-inv = read_inventory_from_file("inventory.txt")
+inv = read_inventory_from_file(INV_PATH)
 success = []
 
 # --- Main Program --- #
@@ -69,7 +73,7 @@ while True:
         tax = calculate_tax(cost)
 
     else:
-        save_inventory(inv, success)
+        save_inventory(inv, success, INV_PATH)
         break
 
 generate_report(inv, wrong)
