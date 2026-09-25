@@ -1,16 +1,17 @@
 # --- Functions --- #
-def get_valid_input():
+def get_valid_input(valid):
     result = input("Please enter stock quantity: ")
 
     if result.isdigit() and int(result) >= 0:
-        return int(result)
+        valid += result
+        return int(result), valid
 
     elif result == "quit":
-        return result
+        return result, valid
 
     else:
         print("Invalid input. Please enter a non-negative integer.")
-        return None
+        return None, valid
 
 
 def process_delivery(current_total, new_value):
@@ -38,11 +39,11 @@ def read_inventory_from_file(filename):
 # --- Variables --- #
 wrong = 0
 inv = read_inventory_from_file("inventory.txt")
-
+success = []
 
 # --- Main Program --- #
 while True:
-    stock = get_valid_input()
+    stock, success = get_valid_input(success)
 
     if stock is None:
         wrong += 1
@@ -60,3 +61,4 @@ while True:
         break
 
 generate_report(inv, wrong)
+print(success)
