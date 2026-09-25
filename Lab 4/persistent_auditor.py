@@ -30,10 +30,21 @@ def generate_report(total_units, failed_attempts):
 def read_inventory_from_file(filename):
     try:
         with open(filename, "r") as file:
-            return int(file.read().strip())
+            try:
+                return int(file.read().strip())
+
+            except ValueError:
+                return 0
 
     except FileNotFoundError:
         return 0
+
+
+def save_inventory(inv, success):
+    with open("inventory.txt", "w") as file:
+        file.write(f"{inv}\n{success}")
+
+    return
 
 
 # --- Variables --- #
@@ -58,7 +69,7 @@ while True:
         tax = calculate_tax(cost)
 
     else:
+        save_inventory(inv, success)
         break
 
 generate_report(inv, wrong)
-print(success)
