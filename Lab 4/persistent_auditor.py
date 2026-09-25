@@ -1,8 +1,3 @@
-# --- Variables --- #
-inv = 0
-wrong = 0
-
-
 # --- Functions --- #
 def get_valid_input():
     result = input("Please enter stock quantity: ")
@@ -33,15 +28,19 @@ def generate_report(total_units, failed_attempts):
 
 def read_inventory_from_file(filename):
     try:
-        with open(filename, 'r') as file:
+        with open(filename, "r") as file:
             return int(file.read().strip())
-        
+
     except FileNotFoundError:
         return 0
 
-# --- Main Program --- #
+
+# --- Variables --- #
+wrong = 0
 inv = read_inventory_from_file("inventory.txt")
 
+
+# --- Main Program --- #
 while True:
     stock = get_valid_input()
 
