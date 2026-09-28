@@ -34,7 +34,9 @@ def calculate_tax(amount):
 
 
 def generate_report(total_units, failed_attempts):
-    print(f"Total Units Processed: {total_units}")
+    print("Total Units Processed: ")
+    for item in total_units:
+        print(", ".join(map(str, item)))
     print(f"Number of Failed/Rejected Entries: {failed_attempts}")
 
 
@@ -60,26 +62,23 @@ def save_inventory(inv, inv_path):
         for line in inv:
             file.write(f"{', '.join(map(str, line))}\n")
 
-    return
-
 
 def get_product(inventory):
     product = get_valid_input("product")
 
     if product is None:
-        return None
+        return None, None
 
     elif product == "quit":
-        return product
+        return product, None
 
     for line in inventory:
         if product in line:
-            return line
+            return line, False
 
     new_product = [inventory[-1][0] + 1, product, 0]
-    inventory.append(new_product)
 
-    return new_product
+    return new_product, True
 
 
 # --- Constants --- #
@@ -92,7 +91,7 @@ inv = load_inventory(INV_PATH)
 
 # --- Main Program --- #
 while True:
-    product = get_product(inv)
+    product, flag = get_product(inv)
 
     if product != "quit":
         if product is None:
@@ -107,9 +106,13 @@ while True:
         elif stock != "quit":
             if stock + product[2] > 500:
                 print("Stock quantity exceeds maximum limit.")
-                break
+                continue
 
             product = process_delivery(product, stock)
+
+            if flag:
+                inv.append(product)
+
             cost = stock * 10  # Assuming delivery per unit costs $10
             tax = calculate_tax(cost)
 
