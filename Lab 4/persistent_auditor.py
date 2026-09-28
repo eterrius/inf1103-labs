@@ -72,13 +72,14 @@ def get_product(inventory):
     elif product == "quit":
         return product, None
 
+    if inventory == []:
+        return [1001, product, 0]
+
     for line in inventory:
         if product in line:
             return line, False
 
-    new_product = [inventory[-1][0] + 1, product, 0]
-
-    return new_product, True
+    return [inventory[-1][0] + 1, product, 0], True
 
 
 # --- Constants --- #
