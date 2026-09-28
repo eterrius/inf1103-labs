@@ -73,7 +73,7 @@ def get_product(inventory):
         return product, None
 
     if inventory == []:
-        return [1001, product, 0]
+        return [1001, product, 0], True
 
     for line in inventory:
         if product in line:
