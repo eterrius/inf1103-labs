@@ -27,17 +27,21 @@ def generate_report(total_units, failed_attempts):
     print(f"Number of Failed/Rejected Entries: {failed_attempts}")
 
 
-def read_inventory_from_file(filename):
-    try:
-        with open(filename, "r") as file:
-            try:
-                return int(file.read().strip())
+def load_inventory(inv_path):
+    result = []
 
-            except ValueError:
-                return 0
+    try:
+        with open(inv_path, "r") as file:
+            for line in file.readlines():
+                current = line.strip().split(", ")
+                current[0], current[2] = int(current[0]), int(current[2])
+
+                result.append(current)
+
+            return result
 
     except FileNotFoundError:
-        return 0
+        return result
 
 
 def save_inventory(inv, success, inv_path):
@@ -53,7 +57,7 @@ INV_PATH = "inventory.txt"
 
 # --- Variables --- #
 wrong = 0
-inv = read_inventory_from_file(INV_PATH)
+inv = load_inventory(INV_PATH)
 success = []
 
 # --- Main Program --- #
