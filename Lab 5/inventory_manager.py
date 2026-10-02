@@ -1,23 +1,34 @@
 # --- Imports --- #
+import json
 
 
 # --- Functions --- #
-def get_menu():
-    print("""
------------ MENU -----------
-1. Display All Products
-2. Add Product
-3. Update Stock
-4. Search Product
-5. Save Inventory
-6. Exit
-----------------------------
-""")
+def load_inventory(inv_name):
+    print()
 
+    try:
+        with open(inv_name, "r") as file:
+            print(f"{inv_name} found.")
+            inventory = json.load(file)
+            print("Inventory loaded successfully.")
+            return inventory
+
+    except FileNotFoundError:
+        print("Inventory file not found. Starting with an empty inventory.")
+        return {}
+
+    except json.JSONDecodeError:
+        print(
+            "Error decoding JSON, file may be empty or corrupted. Starting with an empty inventory."
+        )
+        return {}
+
+
+def get_menu():
     return get_valid_input("menu", input("Enter option: "))
 
 
-def get_valid_input(input_type, user_input):
+def get_valid_input(input_type, user_input, inventory={}):
     # Menu
     if input_type == "menu":
         if user_input in ["1", "2", "3", "4", "5", "6"]:
@@ -29,10 +40,21 @@ def get_valid_input(input_type, user_input):
     # Add Product
     elif input_type == "product_id":
         if user_input.upper().startswith("P") and user_input[1:].isdigit():
-            return user_input.upper()
+            if user_input.upper() not in inventory.keys():
+                return user_input.upper()
+
+            print("Product ID already exists. Please input again. ")
+            return get_valid_input("product_id", input("Product ID: "), inventory)
 
         print("Invalid product ID. Please input again. ")
-        return get_valid_input("product_id", input("Product ID: "))
+        return get_valid_input("product_id", input("Product ID: "), inventory)
+
+    elif input_type == "product_name":
+        if user_input.strip() != "":
+            return user_input.strip()
+
+        print("Invalid product name. Please input again. ")
+        return get_valid_input("product_name", input("Product Name: "))
 
     elif input_type == "product_price":
         try:
@@ -56,8 +78,8 @@ def add_product(inventory):
     print("Add New Product")
 
     product = {}
-    id = get_valid_input("product_id", input("Product ID: "))
-    product["name"] = input("Product Name: ")
+    id = get_valid_input("product_id", input("Product ID: "), inventory)
+    product["name"] = get_valid_input("product_name", input("Product Name: "))
     product["price"] = get_valid_input("product_price", input("Product Price: "))
     product["stock"] = get_valid_input("product_stock", input("Product Stock: "))
 
@@ -84,15 +106,30 @@ def display_inventory(inventory):
     return
 
 
-# --- Constants and Variables --- #
-INV_PATH = "inventory.json"
-inventory = {}
+# --- Constants --- #
+INV_NAME = "inventory.json"
+
 
 # --- Main Program --- #
-while True:
-    print("""========================================
+print("""========================================
 INVENTORY MANAGEMENT SYSTEM
 ========================================""")
+
+inventory = load_inventory(INV_NAME)
+
+print("""
+----------- MENU -----------
+1. Display All Products
+2. Add Product
+3. Update Stock
+4. Search Product
+5. Save Inventory
+6. Exit
+----------------------------
+""")
+
+while True:
+
     choice = get_menu()
 
     if choice == "1":
@@ -103,7 +140,7 @@ INVENTORY MANAGEMENT SYSTEM
         print(inventory)
 
     elif choice == "6":
-        print("Thank you for using the Inventory Management System.")
+        print("\nThank you for using the Inventory Management System.")
         break
 
 
