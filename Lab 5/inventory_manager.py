@@ -56,12 +56,12 @@ def add_product(inventory):
     print("Add New Product")
 
     product = {}
-    product["id"] = get_valid_input("product_id", input("Product ID: "))
+    id = get_valid_input("product_id", input("Product ID: "))
     product["name"] = input("Product Name: ")
     product["price"] = get_valid_input("product_price", input("Product Price: "))
     product["stock"] = get_valid_input("product_stock", input("Product Stock: "))
 
-    inventory[product["id"]] = product
+    inventory[id] = product
     print("Product added successfully!")
 
     return inventory
