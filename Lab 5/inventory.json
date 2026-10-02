@@ -1,0 +1,5 @@
+{
+  "P101": { "name": "Product 1", "price": 10.99, "stock": 50 },
+  "P102": { "name": "Product 2", "price": 15.49, "stock": 30 },
+  "P103": { "name": "Product 3", "price": 7.99, "stock": 100 }
+}
