@@ -73,6 +73,14 @@ def get_valid_input(input_type, user_input, inventory={}):
         print("Invalid product stock. Please input a non-negative integer.")
         return get_valid_input("product_stock", input("Product Stock: "))
 
+    # Update Stock
+    elif input_type == "update_stock":
+        if user_input.upper() in inventory.keys():
+            return user_input.upper()
+
+        print("Product ID not found. Please input again. ")
+        return get_valid_input("update_stock", input("Enter Product ID: "), inventory)
+
 
 def add_product(inventory):
     print("Add New Product")
@@ -106,6 +114,25 @@ def display_inventory(inventory):
     return
 
 
+def update_stock(inventory):
+    print("\nUpdate Stock")
+    product_id = get_valid_input("update_stock", input("Enter Product ID: "), inventory)
+
+    product = inventory[product_id]
+
+    print(
+        f"Product found: \nName: {product['name']} \nCurrent Stock: {product['stock']}"
+    )
+
+    inventory[product_id]["stock"] = get_valid_input(
+        "product_stock", input("New Stock Quantity: ")
+    )
+
+    print("\nStock updated successfully!")
+
+    return inventory
+
+
 # --- Constants --- #
 INV_NAME = "inventory.json"
 
@@ -137,6 +164,9 @@ while True:
 
     elif choice == "2":
         inventory = add_product(inventory)
+
+    elif choice == "3":
+        inventory = update_stock(inventory)
         print(inventory)
 
     elif choice == "6":
