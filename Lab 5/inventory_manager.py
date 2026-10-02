@@ -67,6 +67,23 @@ def add_product(inventory):
     return inventory
 
 
+def display_inventory(inventory):
+    if not inventory:
+        print("\nInventory is empty.\n")
+        return
+
+    print("\nCurrent Inventory")
+    print("-" * 50)
+    for product_id, product in inventory.items():
+        print(
+            f"ID: {product_id} | Name: {product['name']} | Price: {"$" + str(product['price'])} | Stock: {product['stock']}"
+        )
+    print("-" * 50)
+    print()
+
+    return
+
+
 # --- Constants and Variables --- #
 INV_PATH = "inventory.json"
 inventory = {}
@@ -78,7 +95,10 @@ INVENTORY MANAGEMENT SYSTEM
 ========================================""")
     choice = get_menu()
 
-    if choice == "2":
+    if choice == "1":
+        display_inventory(inventory)
+
+    elif choice == "2":
         inventory = add_product(inventory)
         print(inventory)
 
