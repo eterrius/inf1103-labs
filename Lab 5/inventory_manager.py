@@ -81,6 +81,14 @@ def get_valid_input(input_type, user_input, inventory={}):
         print("Product ID not found. Please input again. ")
         return get_valid_input("update_stock", input("Enter Product ID: "), inventory)
 
+    # Search Product
+    elif input_type == "search_id":
+        if user_input.upper().startswith("P") and user_input[1:].isdigit():
+            return user_input.upper()
+
+        print("Invalid product ID. Please input again. ")
+        return get_valid_input("search_id", input("Product ID: "), inventory)
+
 
 def add_product(inventory):
     print("Add New Product")
@@ -106,7 +114,7 @@ def display_inventory(inventory):
     print("-" * 50)
     for product_id, product in inventory.items():
         print(
-            f"ID: {product_id} | Name: {product['name']} | Price: {"$" + str(product['price'])} | Stock: {product['stock']}"
+            f"ID: {product_id} | Name: {product['name']} | Price: ${str(product['price'])} | Stock: {product['stock']}"
         )
     print("-" * 50)
     print()
@@ -131,6 +139,25 @@ def update_stock(inventory):
     print("\nStock updated successfully!")
 
     return inventory
+
+
+def search_product(inventory):
+
+    search_id = get_valid_input("search_id", input("Enter Product ID: "))
+
+    if search_id in inventory.keys():
+        product = inventory[search_id]
+
+        print("\nProduct Found")
+        print("-" * 50)
+        print("ID:", search_id)
+        print("Name:", product["name"])
+        print("Price:", product["price"])
+        print("Stock:", product["stock"])
+        print("-" * 50, "\n")
+
+    else:
+        print("\nProduct not found. \n")
 
 
 # --- Constants --- #
@@ -167,7 +194,9 @@ while True:
 
     elif choice == "3":
         inventory = update_stock(inventory)
-        print(inventory)
+
+    elif choice == "4":
+        search_product(inventory)
 
     elif choice == "6":
         print("\nThank you for using the Inventory Management System.")
