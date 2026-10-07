@@ -25,35 +25,31 @@ def load_inventory(inv_name):
 
 
 def get_menu():
-    return get_valid_input("menu", input("\nEnter option: "))
+    return get_valid_input("menu", input("Enter option: "))
 
 
-def get_valid_input(input_type, user_input, inventory={}):
+def get_valid_input(input_type, user_input):
     # Menu
     if input_type == "menu":
         if user_input in ["1", "2", "3", "4", "5", "6"]:
             return user_input
 
-        print("Invalid menu option. Please input again. ")
+        print("\nInvalid menu option. Please input again. ")
         return get_menu()
 
-    # Add Product
+    # Product Validation
     elif input_type == "product_id":
         if user_input.upper().startswith("P") and user_input[1:].isdigit():
-            if user_input.upper() not in inventory.keys():
-                return user_input.upper()
+            return user_input.upper()
 
-            print("Product ID already exists. Please input again. ")
-            return get_valid_input("product_id", input("Product ID: "), inventory)
-
-        print("Invalid product ID. Please input again. ")
-        return get_valid_input("product_id", input("Product ID: "), inventory)
+        print("\nInvalid product ID. Please input again. ")
+        return get_valid_input("product_id", input("Product ID: "))
 
     elif input_type == "product_name":
         if user_input.strip() != "":
             return user_input.strip()
 
-        print("Invalid product name. Please input again. ")
+        print("\nInvalid product name. Please input again. ")
         return get_valid_input("product_name", input("Product Name: "))
 
     elif input_type == "product_price":
@@ -63,46 +59,33 @@ def get_valid_input(input_type, user_input, inventory={}):
                 raise ValueError
             return price
         except ValueError:
-            print("Invalid product price. Please input a non-negative number.")
+            print("\nInvalid product price. Please input a non-negative number.")
             return get_valid_input("product_price", input("Product Price: "))
 
     elif input_type == "product_stock":
         if user_input.isdigit() and int(user_input) >= 0:
             return int(user_input)
 
-        print("Invalid product stock. Please input a non-negative integer.")
+        print("\nInvalid product stock. Please input a non-negative integer.")
         return get_valid_input("product_stock", input("Product Stock: "))
-
-    # Update Stock
-    elif input_type == "update_stock":
-        if user_input.upper() in inventory.keys():
-            return user_input.upper()
-
-        print("Product ID not found. Please input again. ")
-        return get_valid_input("update_stock", input("Enter Product ID: "), inventory)
-
-    # Search Product
-    elif input_type == "search_id":
-        if user_input.upper().startswith("P") and user_input[1:].isdigit():
-            return user_input.upper()
-
-        print("Invalid product ID. Please input again. ")
-        return get_valid_input("search_id", input("Product ID: "))
 
 
 def add_product(inventory):
-    print("Add New Product")
-
     product = {}
-    id = get_valid_input("product_id", input("Product ID: "), inventory)
-    product["name"] = get_valid_input("product_name", input("Product Name: "))
-    product["price"] = get_valid_input("product_price", input("Product Price: "))
-    product["stock"] = get_valid_input("product_stock", input("Product Stock: "))
+    product_id = get_valid_input("product_id", input("Product ID: "))
 
-    inventory[id] = product
-    print("Product added successfully!")
+    if product_id not in inventory.keys():
+        inventory[product_id] = product
+        product["name"] = get_valid_input("product_name", input("Product Name: "))
+        product["price"] = get_valid_input("product_price", input("Product Price: "))
+        product["stock"] = get_valid_input("product_stock", input("Product Stock: "))
 
-    return inventory
+        print("\nProduct added successfully!\n")
+
+        return inventory
+
+    print("\nProduct ID already exists. Please input again. ")
+    return add_product(inventory)
 
 
 def display_inventory(inventory):
@@ -123,27 +106,29 @@ def display_inventory(inventory):
 
 
 def update_stock(inventory):
-    print("\nUpdate Stock")
-    product_id = get_valid_input("update_stock", input("Enter Product ID: "))
+    product_id = get_valid_input("product_id", input("Enter Product ID: "))
 
-    product = inventory[product_id]
+    if product_id in inventory.keys():
+        product = inventory[product_id]
 
-    print(
-        f"Product found: \nName: {product['name']} \nCurrent Stock: {product['stock']}"
-    )
+        print(
+            f"Product found: \nName: {product['name']} \nCurrent Stock: {product['stock']}"
+        )
 
-    inventory[product_id]["stock"] = get_valid_input(
-        "product_stock", input("New Stock Quantity: ")
-    )
+        inventory[product_id]["stock"] = get_valid_input(
+            "product_stock", input("\nNew Stock Quantity: ")
+        )
 
-    print("\nStock updated successfully!")
+        print("\nStock updated successfully!\n")
+
+    else:
+        print("\nProduct not found. \n")
 
     return inventory
 
 
 def search_product(inventory):
-
-    search_id = get_valid_input("search_id", input("Enter Product ID: "))
+    search_id = get_valid_input("product_id", input("Enter Product ID: "))
 
     if search_id in inventory.keys():
         product = inventory[search_id]
@@ -161,10 +146,8 @@ def search_product(inventory):
 
 
 def save_inventory(inv_name, inventory):
-
     with open(inv_name, "w") as file:
         file.write(json.dumps(inventory, indent=2))
-        print("Inventory saved successfully.")
 
 
 # --- Constants --- #
@@ -190,28 +173,32 @@ print("""
 """)
 
 while True:
-
     choice = get_menu()
 
     if choice == "1":
         display_inventory(inventory)
 
     elif choice == "2":
+        print("\nAdd New Product")
         inventory = add_product(inventory)
 
     elif choice == "3":
+        print("\nUpdate Stock")
         inventory = update_stock(inventory)
 
     elif choice == "4":
+        print("\nSearch Product")
         search_product(inventory)
 
     elif choice == "5":
         print("\nSaving inventory...")
         save_inventory(INV_NAME, inventory)
+        print(f"Inventory saved successfully to {INV_NAME}.\n")
 
     elif choice == "6":
         print("\nSaving inventory before exit...")
         save_inventory(INV_NAME, inventory)
+        print("Inventory saved successfully.")
         print("\nThank you for using the Inventory Management System.")
         break
 
