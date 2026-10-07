@@ -25,7 +25,7 @@ def load_inventory(inv_name):
 
 
 def get_menu():
-    return get_valid_input("menu", input("Enter option: "))
+    return get_valid_input("menu", input("\nEnter option: "))
 
 
 def get_valid_input(input_type, user_input, inventory={}):
@@ -87,7 +87,7 @@ def get_valid_input(input_type, user_input, inventory={}):
             return user_input.upper()
 
         print("Invalid product ID. Please input again. ")
-        return get_valid_input("search_id", input("Product ID: "), inventory)
+        return get_valid_input("search_id", input("Product ID: "))
 
 
 def add_product(inventory):
@@ -124,7 +124,7 @@ def display_inventory(inventory):
 
 def update_stock(inventory):
     print("\nUpdate Stock")
-    product_id = get_valid_input("update_stock", input("Enter Product ID: "), inventory)
+    product_id = get_valid_input("update_stock", input("Enter Product ID: "))
 
     product = inventory[product_id]
 
@@ -158,6 +158,13 @@ def search_product(inventory):
 
     else:
         print("\nProduct not found. \n")
+
+
+def save_inventory(inv_name, inventory):
+
+    with open(inv_name, "w") as file:
+        file.write(json.dumps(inventory, indent=2))
+        print("Inventory saved successfully.")
 
 
 # --- Constants --- #
@@ -198,7 +205,13 @@ while True:
     elif choice == "4":
         search_product(inventory)
 
+    elif choice == "5":
+        print("\nSaving inventory...")
+        save_inventory(INV_NAME, inventory)
+
     elif choice == "6":
+        print("\nSaving inventory before exit...")
+        save_inventory(INV_NAME, inventory)
         print("\nThank you for using the Inventory Management System.")
         break
 
