@@ -68,11 +68,65 @@ class Inventory:
             print("\nProduct not found. \n")
 
 
+class Main:
+    def __init__(self):
+        self.__inventory = Inventory()
+
+        self.__options = {
+            "1": self.__inventory.display_all,
+            "2": self.__inventory.add_product,
+            "3": self.__inventory.update_stock,
+            "4": self.__inventory.search_product,
+            "5": self.get_inventory, # This option is a placeholder for saving the inventory
+            "6": self.exit_program,
+        }
+
+    def display_menu(self):
+        print("""
+----------- MENU -----------
+1. Display All Products
+2. Add Product
+3. Update Stock
+4. Search Product
+5. Save Inventory
+6. Exit
+----------------------------
+""")
+        print()
+
+    def get_choice(self):
+        choice = input("Enter your choice (1-6): ")
+        return choice
+
+    def validate_choice(self, choice):
+        if choice in self.__options.keys():
+            return True
+        else:
+            print("\nInvalid choice. Please try again.\n")
+            return False
+
+    def execute_choice(self, choice):
+        if self.validate_choice(choice):
+            self.__options[choice]()
+
+    def exit_program(self):
+        print("\nProgram terminated.\n")
+        exit()
+
+    def get_inventory(self):
+        return self.__inventory
+
+
 # --- Functions --- #
 
 # --- Main Program --- #
 if __name__ == "__main__":
-    inventory = Inventory()  # creating the inventory object from the Inventory class
+    main_program = Main()
+
+    main_program.display_menu()
+    inventory = (
+        main_program.get_inventory()
+    )  # creating the inventory object from the Inventory class
 
     product1 = Product(
         "P001", "Laptop", 1200.00, 15
@@ -88,3 +142,5 @@ if __name__ == "__main__":
     inventory.update_stock("P001", 20)  # update stock for product with ID "P001"
     inventory.search_product("P001")  # search for product with ID "P002"
     inventory.display_all()  # display all products in the inventory
+
+    main_program.get_inventory().display_all() # display the main program's inventory again
