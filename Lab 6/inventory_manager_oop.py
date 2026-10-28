@@ -24,7 +24,7 @@ class Product:
 
 class Inventory:
     def __init__(self):
-        self.__inventory = {}
+        self.__inventory = FileHandler("inventory.json").load_inventory()
 
     def add_product(self, product):
         self.__inventory[product.get_product_info()["product_id"]] = product
@@ -117,11 +117,48 @@ class Main:
         return self.__inventory
 
 
+class FileHandler:
+    def __init__(self, filename):
+        self.__filename = filename
+
+    def load_inventory(self):
+        inv_name = self.__filename
+
+        try:
+            with open(inv_name, "r") as file:
+                print(f"{inv_name} found.")
+                inventory = json.load(file)
+                print("Inventory loaded successfully.")
+                return inventory
+
+        except FileNotFoundError:
+            print("Inventory file not found. Starting with an empty inventory.")
+            return {}
+
+        except json.JSONDecodeError:
+            print(
+                "Error decoding JSON, file may be empty or corrupted. Starting with an empty inventory."
+            )
+            return {}
+
+    def save_inventory(self, inventory):
+        inv_name = self.__filename
+
+        try:
+            with open(inv_name, "w") as file:
+                file.write(json.dumps(inventory, indent=2))
+                print("Inventory saved successfully.")
+
+        except Exception as e:
+            print(f"Error saving inventory: {e}")
+
+
 # --- Functions --- #
 
 # --- Main Program --- #
 if __name__ == "__main__":
     main_program = Main()
+    main_program.get_inventory()
 
     main_program.display_menu()
     inventory = (
@@ -143,4 +180,4 @@ if __name__ == "__main__":
     inventory.search_product("P001")  # search for product with ID "P002"
     inventory.display_all()  # display all products in the inventory
 
-    main_program.get_inventory().display_all() # display the main program's inventory again
+    main_program.get_inventory().display_all()  # display the main program's inventory again
