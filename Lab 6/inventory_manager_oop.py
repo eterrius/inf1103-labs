@@ -26,26 +26,7 @@ class Inventory:
     def __init__(self):
         self.__inventory = {}
 
-    def add_product(self, product=None):
-        if not product:
-            product_id = self.get_valid_input("product_id", input("Product ID: "))
-
-            if product_id not in self.__inventory.keys():
-                product = Product(
-                    product_id=product_id,
-                    name=self.get_valid_input("product_name", input("Product Name: ")),
-                    price=self.get_valid_input(
-                        "product_price", input("Product Price: ")
-                    ),
-                    stock=self.get_valid_input(
-                        "product_stock", input("Product Stock: ")
-                    ),
-                )
-
-            else:
-                print("\nProduct ID already exists. Please input again. ")
-                return self.add_product()
-
+    def add_product(self, product):
         self.__inventory[product.get_product_info()["product_id"]] = product
 
     def display_all(self):
@@ -64,20 +45,11 @@ class Inventory:
         print("-" * 50)
         print()
 
-    def update_stock(self):
-        product_id, product = self.search_product()
+    def update_stock(self, product_id, new_stock):
+        self.__inventory[product_id].update_stock(new_stock)
+        print("\nStock updated successfully!\n")
 
-        if product:
-            new_stock = self.get_valid_input(
-                "product_stock", input("\nNew Stock Quantity: ")
-            )
-
-            self.__inventory[product_id].update_stock(new_stock)
-            print("\nStock updated successfully!\n")
-
-    def search_product(self):
-        product_id = self.get_valid_input("product_id", input("Enter Product ID: "))
-
+    def search_product(self, product_id):
         if product_id in self.__inventory.keys():
             product = self.__inventory[product_id].get_product_info()
 
@@ -97,6 +69,34 @@ class Inventory:
 
     def items(self):
         return self.__inventory.items()
+
+
+class Main:
+    def __init__(self):
+        self.__inventory = Inventory()
+        self.__handler = FileHandler(self.__inventory)
+
+        self.__options = {
+            "1": self.__inventory.display_all,
+            "2": self.add_product,
+            "3": self.update_stock,
+            "4": self.search_product,
+            "5": self.save_inventory,
+            "6": self.exit_program,
+        }
+
+    def display_menu(self):
+        print("""
+----------- MENU -----------
+1. Display All Products
+2. Add Product
+3. Update Stock
+4. Search Product
+5. Save Inventory
+6. Exit
+----------------------------
+""")
+        print()
 
     def get_valid_input(self, input_type, user_input):
         # Product Validation
@@ -131,33 +131,37 @@ class Inventory:
             print("\nInvalid product stock. Please input a non-negative integer.")
             return self.get_valid_input("product_stock", input("Product Stock: "))
 
+    def add_product(self):
+        product_id = self.get_valid_input("product_id", input("Enter Product ID: "))
 
-class Main:
-    def __init__(self):
-        self.__inventory = Inventory()
-        self.__handler = FileHandler(self.__inventory)
+        if product_id not in self.__inventory.keys():
+            product = Product(
+                product_id=product_id,
+                name=self.get_valid_input("product_name", input("Product Name: ")),
+                price=self.get_valid_input("product_price", input("Product Price: ")),
+                stock=self.get_valid_input("product_stock", input("Product Stock: ")),
+            )
 
-        self.__options = {
-            "1": self.__inventory.display_all,
-            "2": self.__inventory.add_product,
-            "3": self.__inventory.update_stock,
-            "4": self.__inventory.search_product,
-            "5": self.save_inventory,
-            "6": self.exit_program,
-        }
+            self.__inventory.add_product(product=product)
 
-    def display_menu(self):
-        print("""
------------ MENU -----------
-1. Display All Products
-2. Add Product
-3. Update Stock
-4. Search Product
-5. Save Inventory
-6. Exit
-----------------------------
-""")
-        print()
+        else:
+            print("\nProduct ID already exists. Please input again. ")
+            return self.add_product()
+
+    def search_product(self):
+        product_id = self.get_valid_input("product_id", input("Enter Product ID: "))
+        return self.__inventory.search_product(product_id=product_id)
+
+    def update_stock(self):
+        product_id, product = self.search_product()
+
+        if product:
+            self.__inventory.update_stock(
+                product_id=product_id,
+                new_stock=self.get_valid_input(
+                    "product_stock", input("\nNew Stock Quantity: ")
+                ),
+            )
 
     def get_choice(self):
         choice = input("Enter option: ")
