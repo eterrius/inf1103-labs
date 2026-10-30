@@ -1,0 +1,37 @@
+{
+  "P101": {
+    "name": "Product 1",
+    "price": 10.99,
+    "stock": 50
+  },
+  "P102": {
+    "name": "Product 2",
+    "price": 15.49,
+    "stock": 30
+  },
+  "P103": {
+    "name": "Product 3",
+    "price": 7.99,
+    "stock": 100
+  },
+  "P104": {
+    "name": "Test",
+    "price": 10.0,
+    "stock": 50
+  },
+  "P001": {
+    "name": "Laptop",
+    "price": 1200.0,
+    "stock": 20
+  },
+  "P002": {
+    "name": "Mouse",
+    "price": 25.5,
+    "stock": 40
+  },
+  "P10003": {
+    "name": "a",
+    "price": 1.0,
+    "stock": 4
+  }
+}

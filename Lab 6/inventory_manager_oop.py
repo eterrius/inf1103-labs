@@ -70,6 +70,9 @@ class Inventory:
     def items(self):
         return self.__inventory.items()
 
+    def keys(self):
+        return self.__inventory.keys()
+
 
 class Main:
     def __init__(self):
