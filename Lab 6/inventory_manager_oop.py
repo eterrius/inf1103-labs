@@ -26,7 +26,26 @@ class Inventory:
     def __init__(self):
         self.__inventory = {}
 
-    def add_product(self, product):
+    def add_product(self, product=None):
+        if not product:
+            product_id = self.get_valid_input("product_id", input("Product ID: "))
+
+            if product_id not in self.__inventory.keys():
+                product = Product(
+                    product_id=product_id,
+                    name=self.get_valid_input("product_name", input("Product Name: ")),
+                    price=self.get_valid_input(
+                        "product_price", input("Product Price: ")
+                    ),
+                    stock=self.get_valid_input(
+                        "product_stock", input("Product Stock: ")
+                    ),
+                )
+
+            else:
+                print("\nProduct ID already exists. Please input again. ")
+                return self.add_product()
+
         self.__inventory[product.get_product_info()["product_id"]] = product
 
     def display_all(self):
@@ -45,14 +64,20 @@ class Inventory:
         print("-" * 50)
         print()
 
-    def update_stock(self, product_id, new_stock):
-        if product_id in self.__inventory.keys():
+    def update_stock(self):
+        product_id, product = self.search_product()
+
+        if product:
+            new_stock = self.get_valid_input(
+                "product_stock", input("\nNew Stock Quantity: ")
+            )
+
             self.__inventory[product_id].update_stock(new_stock)
             print("\nStock updated successfully!\n")
-        else:
-            print("\nProduct not found. \n")
 
-    def search_product(self, product_id):
+    def search_product(self):
+        product_id = self.get_valid_input("product_id", input("Enter Product ID: "))
+
         if product_id in self.__inventory.keys():
             product = self.__inventory[product_id].get_product_info()
 
@@ -66,9 +91,45 @@ class Inventory:
 
         else:
             print("\nProduct not found. \n")
+            return product_id, None
+
+        return product_id, product
 
     def items(self):
         return self.__inventory.items()
+
+    def get_valid_input(self, input_type, user_input):
+        # Product Validation
+        if input_type == "product_id":
+            if user_input.upper().startswith("P") and user_input[1:].isdigit():
+                return user_input.upper()
+
+            print("\nInvalid product ID. Please input again. ")
+            return self.get_valid_input("product_id", input("Product ID: "))
+
+        elif input_type == "product_name":
+            if user_input.strip() != "":
+                return user_input.strip()
+
+            print("\nInvalid product name. Please input again. ")
+            return self.get_valid_input("product_name", input("Product Name: "))
+
+        elif input_type == "product_price":
+            try:
+                price = float(user_input)
+                if price < 0:
+                    raise ValueError
+                return price
+            except ValueError:
+                print("\nInvalid product price. Please input a non-negative number.")
+                return self.get_valid_input("product_price", input("Product Price: "))
+
+        elif input_type == "product_stock":
+            if user_input.isdigit() and int(user_input) >= 0:
+                return int(user_input)
+
+            print("\nInvalid product stock. Please input a non-negative integer.")
+            return self.get_valid_input("product_stock", input("Product Stock: "))
 
 
 class Main:
@@ -81,7 +142,7 @@ class Main:
             "2": self.__inventory.add_product,
             "3": self.__inventory.update_stock,
             "4": self.__inventory.search_product,
-            "5": self.save_inventory,  # This option is a placeholder for saving the inventory
+            "5": self.save_inventory,
             "6": self.exit_program,
         }
 
@@ -99,7 +160,7 @@ class Main:
         print()
 
     def get_choice(self):
-        choice = input("Enter your choice (1-6): ")
+        choice = input("Enter option: ")
         return choice
 
     def validate_choice(self, choice):
@@ -114,6 +175,8 @@ class Main:
             self.__options[choice]()
 
     def exit_program(self):
+        print("\nSaving inventory before exit...")
+        self.save_inventory()
         print("\nProgram terminated.\n")
         exit()
 
@@ -125,6 +188,15 @@ class Main:
 
     def save_inventory(self):
         self.__handler.save_inventory()  # Save inventory to file
+
+    def run(self):
+        self.load_inventory()
+
+        while True:
+            self.display_menu()
+
+            choice = self.get_choice()
+            self.execute_choice(choice)
 
 
 class FileHandler:
@@ -192,29 +264,4 @@ class FileHandler:
 # --- Main Program --- #
 if __name__ == "__main__":
     main_program = Main()
-
-    main_program.load_inventory()  # Load inventory from file at the start
-
-    main_program.display_menu()
-    inventory = (
-        main_program.get_inventory()
-    )  # creating the inventory object from the Inventory class
-
-    product1 = Product(
-        "P001", "Laptop", 1200.00, 15
-    )  # creating product from Product class, via init
-    product2 = Product("P002", "Mouse", 25.50, 40)
-
-    inventory.add_product(
-        product1
-    )  # pass the product to inventory class to store in a list
-    inventory.add_product(product2)
-
-    inventory.display_all()  # display the inventory
-    inventory.update_stock("P001", 20)  # update stock for product with ID "P001"
-    inventory.search_product("P001")  # search for product with ID "P002"
-    inventory.display_all()  # display all products in the inventory
-
-    main_program.get_inventory().display_all()  # display the main program's inventory again
-
-    main_program.save_inventory()  # Save inventory to file at the end
+    main_program.run()
