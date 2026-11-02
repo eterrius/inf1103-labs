@@ -1,9 +1,10 @@
 # --- Imports --- #
 import json
+from abc import ABC, abstractmethod
 
 
 # --- Classes --- #
-class Product:
+class Product(ABC):
     def __init__(self, product_id, name, price, stock):
         self.__product_id = product_id
         self.__name = name
@@ -21,6 +22,10 @@ class Product:
             "stock": self.__stock,
         }
 
+    @abstractmethod
+    def get_fulfilment_info(self):
+        pass
+
 
 class PhysicalProduct(Product):
     def __init__(self, product_id, name, price, stock, weight):
@@ -32,6 +37,9 @@ class PhysicalProduct(Product):
         product_info["weight"] = str(self.__weight) + " kg"
         return product_info
 
+    def get_fulfilment_info(self):
+        return f"This product requires physical shipping."
+
 
 class DigitalProduct(Product):
     def __init__(self, product_id, name, price, stock, download_size):
@@ -42,6 +50,9 @@ class DigitalProduct(Product):
         product_info = super().get_product_info()
         product_info["download_size"] = str(self.__download_size) + " MB"
         return product_info
+
+    def get_fulfilment_info(self):
+        return f"This product is delivered digitally."
 
 
 class Inventory:
@@ -295,5 +306,8 @@ if __name__ == "__main__":
     # main_program = Main()
     # main_program.run()
 
-    print(PhysicalProduct("P001", "Laptop", 999.99, 10, 2.5).display_information())
-    print(DigitalProduct("P002", "E-book", 9.99, 100, 5).display_information())
+    physical = PhysicalProduct("P001", "Laptop", 999.99, 10, 2.5)
+    digital = DigitalProduct("P002", "E-book", 9.99, 100, 5)
+
+    print(physical.get_fulfilment_info())
+    print(digital.get_fulfilment_info())
