@@ -27,7 +27,13 @@ class Product(ABC):
         pass
 
 
-class PhysicalProduct(Product):
+class CanBeShipped(ABC):
+    @abstractmethod
+    def calculate_shipping_cost(self):
+        pass
+
+
+class PhysicalProduct(Product, CanBeShipped):
     def __init__(self, product_id, name, price, stock, weight):
         super().__init__(product_id, name, price, stock)
         self.__weight = weight
@@ -39,6 +45,10 @@ class PhysicalProduct(Product):
 
     def get_fulfilment_info(self):
         return f"This product requires physical shipping."
+
+    def calculate_shipping_cost(self):
+        shipping_cost_per_kg = 5.0  # Example shipping cost per kg
+        return self.__weight * shipping_cost_per_kg
 
 
 class DigitalProduct(Product):
@@ -311,3 +321,5 @@ if __name__ == "__main__":
 
     print(physical.get_fulfilment_info())
     print(digital.get_fulfilment_info())
+
+    print(f"Shipping cost for {physical.get_product_info()['name']}: ${physical.calculate_shipping_cost()}")   
