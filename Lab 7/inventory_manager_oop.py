@@ -29,7 +29,7 @@ class PhysicalProduct(Product):
 
     def display_information(self):
         product_info = super().get_product_info()
-        product_info["weight"] = self.__weight
+        product_info["weight"] = str(self.__weight) + " kg"
         return product_info
 
 
@@ -40,7 +40,7 @@ class DigitalProduct(Product):
 
     def display_information(self):
         product_info = super().get_product_info()
-        product_info["download_size"] = self.__download_size
+        product_info["download_size"] = str(self.__download_size) + " MB"
         return product_info
 
 
