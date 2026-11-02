@@ -5,8 +5,9 @@ from abc import ABC, abstractmethod
 
 # --- Classes --- #
 class Product(ABC):
-    def __init__(self, product_id, name, price, stock):
+    def __init__(self, product_id, type, name, price, stock):
         self.__product_id = product_id
+        self.__type = type
         self.__name = name
         self.__price = price
         self.__stock = stock
@@ -17,6 +18,7 @@ class Product(ABC):
     def get_product_info(self):
         return {
             "product_id": self.__product_id,
+            "type": self.__type,
             "name": self.__name,
             "price": self.__price,
             "stock": self.__stock,
@@ -34,13 +36,13 @@ class CanBeShipped(ABC):
 
 
 class PhysicalProduct(Product, CanBeShipped):
-    def __init__(self, product_id, name, price, stock, weight):
-        super().__init__(product_id, name, price, stock)
+    def __init__(self, product_id, type, name, price, stock, weight):
+        super().__init__(product_id, type, name, price, stock)
         self.__weight = weight
 
     def display_information(self):
         product_info = super().get_product_info()
-        product_info["weight"] = str(self.__weight) + " kg"
+        product_info["weight"] = self.__weight
         return product_info
 
     def get_fulfilment_info(self):
@@ -52,13 +54,13 @@ class PhysicalProduct(Product, CanBeShipped):
 
 
 class DigitalProduct(Product):
-    def __init__(self, product_id, name, price, stock, download_size):
-        super().__init__(product_id, name, price, stock)
+    def __init__(self, product_id, type, name, price, stock, download_size):
+        super().__init__(product_id, type, name, price, stock)
         self.__download_size = download_size
 
     def display_information(self):
         product_info = super().get_product_info()
-        product_info["download_size"] = str(self.__download_size) + " MB"
+        product_info["download_size"] = self.__download_size
         return product_info
 
     def get_fulfilment_info(self):
@@ -70,7 +72,7 @@ class Inventory:
         self.__inventory = {}
 
     def add_product(self, product):
-        self.__inventory[product.get_product_info()["product_id"]] = product
+        self.__inventory[product.display_information()["product_id"]] = product
 
     def display_all(self):
         if not self.__inventory:
@@ -80,10 +82,17 @@ class Inventory:
         print("\nCurrent Inventory")
         print("-" * 50)
         for product_id, product in self.__inventory.items():
-            product_info = product.get_product_info()
-            print(
-                f"ID: {product_id} | Name: {product_info['name']} | Price: ${str(product_info['price'])} | Stock: {product_info['stock']}"
-            )
+            product_info = product.display_information()
+
+            message = f"ID: {product_id} | Name: {product_info['name']} | Price: ${str(product_info['price'])} | Stock: {product_info['stock']}"
+
+            if product_info["type"] == "physical":
+                message += f" | Weight: {product_info['weight']} kg"
+
+            elif product_info["type"] == "digital":
+                message += f" | Download Size: {product_info['download_size']} MB"
+
+            print(message)
 
         print("-" * 50)
         print()
@@ -177,22 +186,84 @@ class Main:
             print("\nInvalid product stock. Please input a non-negative integer.")
             return self.get_valid_input("product_stock", input("Product Stock: "))
 
+        elif input_type == "product_weight":
+            try:
+                weight = float(user_input)
+                if weight < 0:
+                    raise ValueError
+                return weight
+            except ValueError:
+                print("\nInvalid product weight. Please input a non-negative number.")
+                return self.get_valid_input(
+                    "product_weight", input("Product Weight (kg): ")
+                )
+
+        elif input_type == "product_download_size":
+            try:
+                download_size = float(user_input)
+                if download_size < 0:
+                    raise ValueError
+                return download_size
+            except ValueError:
+                print(
+                    "\nInvalid product download size. Please input a non-negative number."
+                )
+                return self.get_valid_input(
+                    "product_download_size", input("Product Download Size (MB): ")
+                )
+
     def add_product(self):
         product_id = self.get_valid_input("product_id", input("Enter Product ID: "))
 
         if product_id not in self.__inventory.keys():
-            product = Product(
-                product_id=product_id,
-                name=self.get_valid_input("product_name", input("Product Name: ")),
-                price=self.get_valid_input("product_price", input("Product Price: ")),
-                stock=self.get_valid_input("product_stock", input("Product Stock: ")),
-            )
+            product_type = self.input_product_type()
+
+            if product_type == "physical":
+                product = PhysicalProduct(
+                    product_id=product_id,
+                    type="physical",
+                    name=self.get_valid_input("product_name", input("Product Name: ")),
+                    price=self.get_valid_input(
+                        "product_price", input("Product Price: ")
+                    ),
+                    stock=self.get_valid_input(
+                        "product_stock", input("Product Stock: ")
+                    ),
+                    weight=self.get_valid_input(
+                        "product_weight", input("Product Weight (kg): ")
+                    ),
+                )
+
+            elif product_type == "digital":
+                product = DigitalProduct(
+                    product_id=product_id,
+                    type="digital",
+                    name=self.get_valid_input("product_name", input("Product Name: ")),
+                    price=self.get_valid_input(
+                        "product_price", input("Product Price: ")
+                    ),
+                    stock=self.get_valid_input(
+                        "product_stock", input("Product Stock: ")
+                    ),
+                    download_size=self.get_valid_input(
+                        "product_download_size", input("Product Download Size (MB): ")
+                    ),
+                )
 
             self.__inventory.add_product(product=product)
 
         else:
             print("\nProduct ID already exists. Please input again. ")
             return self.add_product()
+
+    def input_product_type(self):
+        product_type = input("Enter Product Type (Physical/Digital): ").strip().lower()
+
+        if product_type in ["physical", "digital"]:
+            return product_type
+
+        print("\nInvalid product type. Please input again. ")
+        return self.input_product_type()
 
     def search_product(self):
         product_id = self.get_valid_input("product_id", input("Enter Product ID: "))
@@ -263,12 +334,29 @@ class FileHandler:
                 inventory = json.load(file)
 
             for product_id, product_data in inventory.items():
-                product = Product(
-                    product_id,
-                    product_data["name"],
-                    product_data["price"],
-                    product_data["stock"],
-                )
+                if product_data["type"] == "physical":
+                    product = PhysicalProduct(
+                        product_id,
+                        product_data["type"],
+                        product_data["name"],
+                        product_data["price"],
+                        product_data["stock"],
+                        product_data.get(
+                            "weight", 0
+                        ),  # Default weight to 0 if not present
+                    )
+
+                elif product_data["type"] == "digital":
+                    product = DigitalProduct(
+                        product_id,
+                        product_data["type"],
+                        product_data["name"],
+                        product_data["price"],
+                        product_data["stock"],
+                        product_data.get(
+                            "download_size", 0
+                        ),  # Default download size to 0 if not present
+                    )
 
                 self._inventory.add_product(product)
 
@@ -279,7 +367,7 @@ class FileHandler:
             print("Inventory file not found. Starting with an empty inventory.")
             return {}
 
-        except json.JSONDecodeError:
+        except (json.JSONDecodeError, KeyError):
             print(
                 "Error decoding JSON, file may be empty or corrupted. Starting with an empty inventory."
             )
@@ -300,12 +388,21 @@ class FileHandler:
     def parse_inventory(self):
         inventory_data = {}
         for product_id, product in self._inventory.items():
-            product_info = product.get_product_info()
+            product_info = product.display_information()
             inventory_data[product_id] = {
+                "type": product_info["type"],
                 "name": product_info["name"],
                 "price": product_info["price"],
                 "stock": product_info["stock"],
             }
+
+            if product_info["type"] == "physical":
+                inventory_data[product_id]["weight"] = product_info.get("weight", 0)
+            elif product_info["type"] == "digital":
+                inventory_data[product_id]["download_size"] = product_info.get(
+                    "download_size", 0
+                )
+
         return inventory_data
 
 
@@ -313,13 +410,5 @@ class FileHandler:
 
 # --- Main Program --- #
 if __name__ == "__main__":
-    # main_program = Main()
-    # main_program.run()
-
-    physical = PhysicalProduct("P001", "Laptop", 999.99, 10, 2.5)
-    digital = DigitalProduct("P002", "E-book", 9.99, 100, 5)
-
-    print(physical.get_fulfilment_info())
-    print(digital.get_fulfilment_info())
-
-    print(f"Shipping cost for {physical.get_product_info()['name']}: ${physical.calculate_shipping_cost()}")   
+    main_program = Main()
+    main_program.run()
