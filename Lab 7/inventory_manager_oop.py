@@ -22,6 +22,28 @@ class Product:
         }
 
 
+class PhysicalProduct(Product):
+    def __init__(self, product_id, name, price, stock, weight):
+        super().__init__(product_id, name, price, stock)
+        self.__weight = weight
+
+    def display_information(self):
+        product_info = super().get_product_info()
+        product_info["weight"] = self.__weight
+        return product_info
+
+
+class DigitalProduct(Product):
+    def __init__(self, product_id, name, price, stock, download_size):
+        super().__init__(product_id, name, price, stock)
+        self.__download_size = download_size
+
+    def display_information(self):
+        product_info = super().get_product_info()
+        product_info["download_size"] = self.__download_size
+        return product_info
+
+
 class Inventory:
     def __init__(self):
         self.__inventory = {}
@@ -270,5 +292,8 @@ class FileHandler:
 
 # --- Main Program --- #
 if __name__ == "__main__":
-    main_program = Main()
-    main_program.run()
+    # main_program = Main()
+    # main_program.run()
+
+    print(PhysicalProduct("P001", "Laptop", 999.99, 10, 2.5).display_information())
+    print(DigitalProduct("P002", "E-book", 9.99, 100, 5).display_information())
