@@ -103,7 +103,7 @@ class Inventory:
 
     def search_product(self, product_id):
         if product_id in self.__inventory.keys():
-            product = self.__inventory[product_id].get_product_info()
+            product = self.__inventory[product_id].display_information()
 
             print("\nProduct Found")
             print("-" * 50)
@@ -111,6 +111,23 @@ class Inventory:
             print("Name:", product["name"])
             print("Price:", product["price"])
             print("Stock:", product["stock"])
+
+            if product["type"] == "physical":
+                print("Weight:", product["weight"], "kg")
+                print(
+                    "Shipping Cost: $",
+                    self.__inventory[product_id].calculate_shipping_cost(),
+                )
+                print(
+                    self.__inventory[product_id].get_fulfilment_info(),
+                )
+
+            elif product["type"] == "digital":
+                print("Download Size:", product["download_size"], "MB")
+                print(
+                    self.__inventory[product_id].get_fulfilment_info(),
+                )
+
             print("-" * 50, "\n")
 
         else:
