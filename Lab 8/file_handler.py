@@ -2,6 +2,7 @@
 import json
 from physical_product import PhysicalProduct
 from digital_product import DigitalProduct
+from supplier import Supplier
 
 
 # --- Classes --- #
@@ -19,6 +20,13 @@ class FileHandler:
                 inventory = json.load(file)
 
             for product_id, product_data in inventory.items():
+                supplier_data = product_data.get("supplier", {})
+                supplier = Supplier(
+                    supplier_data.get("supplier_id", ""),
+                    supplier_data.get("name", ""),
+                    supplier_data.get("contact_email", ""),
+                )
+
                 if product_data["type"] == "physical":
                     product = PhysicalProduct(
                         product_id,
@@ -29,6 +37,7 @@ class FileHandler:
                         product_data.get(
                             "weight", 0
                         ),  # Default weight to 0 if not present
+                        supplier,
                     )
 
                 elif product_data["type"] == "digital":
@@ -41,6 +50,7 @@ class FileHandler:
                         product_data.get(
                             "download_size", 0
                         ),  # Default download size to 0 if not present
+                        supplier,
                     )
 
                 self._inventory.add_product(product)
@@ -72,13 +82,16 @@ class FileHandler:
 
     def parse_inventory(self):
         inventory_data = {}
-        for product_id, product in self._inventory.items():
+        for product in self._inventory.products:
             product_info = product.display_information()
+            product_id = product_info["product_id"]
+
             inventory_data[product_id] = {
                 "type": product_info["type"],
                 "name": product_info["name"],
                 "price": product_info["price"],
                 "stock": product_info["stock"],
+                "supplier": product_info["supplier"],
             }
 
             if product_info["type"] == "physical":

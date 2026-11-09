@@ -32,6 +32,7 @@ class Product(ABC):
             "name": self.__name,
             "price": self.__price,
             "stock": self.__stock,
+            "supplier": self.supplier.display_information(),
         }
 
     @abstractmethod

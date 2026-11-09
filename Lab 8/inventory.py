@@ -10,7 +10,7 @@ class Inventory:
         # self.__inventory = {}
         self.products: list[Product] = []
 
-    def add_product(self, product):
+    def add_product(self, product: Product) -> None:
         self.products.append(product)
         # self.__inventory[product.display_information()["product_id"]] = product
 
@@ -29,7 +29,7 @@ class Inventory:
         for product in self.products:
             product_info = product.display_information()
 
-            message = f"ID: {product_info['product_id']} | Name: {product_info['name']} | Price: ${str(product_info['price'])} | Stock: {product_info['stock']}"
+            message = f"ID: {product_info['product_id']} | Name: {product_info['name']} | Price: ${str(product_info['price'])} | Stock: {product_info['stock']} | Supplier: {product_info['supplier']['name']}"
 
             if product_info["type"] == "physical":
                 message += f" | Weight: {product_info['weight']} kg"
@@ -60,38 +60,33 @@ class Inventory:
         # self.__inventory[product_id].update_stock(new_stock)
         print("\nStock updated successfully!\n")
 
-    def search_product(self, product_id):
+    def search_product(self, product_id: str) -> Product | None:
         for product in self.products:
+            product_info = product.display_information()
+
             if product.display_information()["product_id"] == product_id:
                 print("\nProduct Found")
                 print("-" * 50)
                 print("ID:", product_id)
-                print("Name:", product["name"])
-                print("Price:", product["price"])
-                print("Stock:", product["stock"])
+                print("Name:", product_info["name"])
+                print("Price:", product_info["price"])
+                print("Stock:", product_info["stock"])
+                print("Supplier:", product_info["supplier"]["name"])
 
                 if isinstance(product, PhysicalProduct):
-                    print("Weight:", product["weight"], "kg")
-                    print(
-                        "Shipping Cost: $",
-                        self.products[product_id].calculate_shipping_cost(),
-                    )
-                    print(
-                        self.products[product_id].get_fulfilment_info(),
-                    )
+                    print("Weight:", product_info["weight"], "kg")
+                    print("Shipping Cost: $", product.calculate_shipping_cost())
+                    print(product.get_fulfilment_info())
 
                 elif isinstance(product, DigitalProduct):
-                    print("Download Size:", product["download_size"], "MB")
-                    print(
-                        self.products[product_id].get_fulfilment_info(),
-                    )
+                    print("Download Size:", product_info["download_size"], "MB")
+                    print(product.get_fulfilment_info())
 
                 print("-" * 50, "\n")
                 return product
 
-            else:
-                print("\nProduct not found. \n")
-                return None
+        print("\nProduct not found. \n")
+        return None
 
     #     if product_id in self.__inventory.keys():
     #         product = self.__inventory[product_id].display_information()
@@ -127,8 +122,8 @@ class Inventory:
 
     #     return product_id, product
 
-    # def items(self):
-    #     return self.__inventory.items()
-
-    # def keys(self):
-    #     return self.__inventory.keys()
+    def keys(self):
+        # return a list of product IDs in the inventory
+        return [
+            product.display_information()["product_id"] for product in self.products
+        ]

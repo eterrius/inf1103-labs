@@ -113,6 +113,11 @@ class Main:
                     weight=self.get_valid_input(
                         "product_weight", input("Product Weight (kg): ")
                     ),
+                    supplier=Supplier(
+                        supplier_id=input("Supplier ID: "),
+                        name=input("Supplier Name: "),
+                        contact_email=input("Supplier Contact Email: "),
+                    ),
                 )
 
             elif product_type == "digital":
@@ -128,6 +133,11 @@ class Main:
                     ),
                     download_size=self.get_valid_input(
                         "product_download_size", input("Product Download Size (MB): ")
+                    ),
+                    supplier=Supplier(
+                        supplier_id=input("Supplier ID: "),
+                        name=input("Supplier Name: "),
+                        contact_email=input("Supplier Contact Email: "),
                     ),
                 )
 
@@ -151,11 +161,11 @@ class Main:
         return self.__inventory.search_product(product_id=product_id)
 
     def update_stock(self):
-        product_id, product = self.search_product()
+        product = self.search_product()
 
         if product:
             self.__inventory.update_stock(
-                product_id=product_id,
+                product_id=product.display_information()["product_id"],
                 new_stock=self.get_valid_input(
                     "product_stock", input("\nNew Stock Quantity: ")
                 ),
