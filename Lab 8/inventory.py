@@ -79,6 +79,10 @@ class Inventory:
         print("\nProduct not found. \n")
         return None
 
+    def show_product_details(self, product: Product) -> None:
+        print(product.display_information())
+        print(product.get_fulfilment_info())
+
     def keys(self) -> list[str]:
         # return a list of product IDs in the inventory
         return [
