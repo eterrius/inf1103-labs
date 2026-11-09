@@ -13,6 +13,20 @@ class Inventory:
     def add_product(self, product: Product) -> None:
         self.products.append(product)
 
+    def remove_product(self, product_id: str) -> None:
+        product_to_remove = None
+
+        for product in self.products:
+            if product.display_information()["product_id"] == product_id:
+                product_to_remove = product
+                break
+
+        if product_to_remove:
+            self.products.remove(product_to_remove)
+            print(f"\nProduct with ID {product_id} has been removed from the inventory.\n")
+        else:
+            print(f"\nProduct with ID {product_id} not found in the inventory.\n")
+
     def display_all(self):
         if not self.products:
             print("\nInventory is empty.\n")
