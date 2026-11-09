@@ -3,6 +3,7 @@ from physical_product import PhysicalProduct
 from digital_product import DigitalProduct
 from inventory import Inventory
 from file_handler import FileHandler
+from supplier import Supplier
 
 
 # --- Classes --- #
