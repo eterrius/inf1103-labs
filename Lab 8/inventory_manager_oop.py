@@ -164,12 +164,13 @@ class Main:
         product = self.search_product()
 
         if product:
-            self.__inventory.update_stock(
-                product_id=product.display_information()["product_id"],
+            product.update_stock(
                 new_stock=self.get_valid_input(
                     "product_stock", input("\nNew Stock Quantity: ")
-                ),
+                )
             )
+
+            print("\nStock updated successfully!\n")
 
     def get_choice(self):
         choice = input("Enter option: ")

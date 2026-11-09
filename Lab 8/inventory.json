@@ -4,6 +4,11 @@
     "name": "Laptop",
     "price": 3000.0,
     "stock": 4,
+    "supplier": {
+      "supplier_id": "S001",
+      "name": "Tech Supplies Inc.",
+      "contact_email": "a@a.com"
+    },
     "weight": 2.5
   },
   "P101": {
@@ -11,6 +16,11 @@
     "name": "CD",
     "price": 15.99,
     "stock": 10,
+    "supplier": {
+      "supplier_id": "S002",
+      "name": "Digital Media Co.",
+      "contact_email": "a@a.com"
+    },
     "download_size": 4.0
   },
   "P102": {
@@ -18,6 +28,23 @@
     "name": "E-book",
     "price": 2.99,
     "stock": 30,
+    "supplier": {
+      "supplier_id": "S003",
+      "name": "E-Books Ltd.",
+      "contact_email": "a@a.com"
+    },
     "download_size": 50.0
+  },
+  "P103": {
+    "type": "physical",
+    "name": "1",
+    "price": 2.0,
+    "stock": 3,
+    "supplier": {
+      "supplier_id": "1",
+      "name": "2",
+      "contact_email": "3"
+    },
+    "weight": 4.0
   }
 }

@@ -55,11 +55,6 @@ class Inventory:
         print("-" * 50)
         print()
 
-    def update_stock(self, product_id, new_stock):
-        self.products[product_id].update_stock(new_stock)
-        # self.__inventory[product_id].update_stock(new_stock)
-        print("\nStock updated successfully!\n")
-
     def search_product(self, product_id: str) -> Product | None:
         for product in self.products:
             product_info = product.display_information()
