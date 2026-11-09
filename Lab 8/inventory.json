@@ -1,0 +1,23 @@
+{
+  "P100": {
+    "type": "physical",
+    "name": "Laptop",
+    "price": 3000.0,
+    "stock": 4,
+    "weight": 2.5
+  },
+  "P101": {
+    "type": "digital",
+    "name": "CD",
+    "price": 15.99,
+    "stock": 10,
+    "download_size": 4.0
+  },
+  "P102": {
+    "type": "digital",
+    "name": "E-book",
+    "price": 2.99,
+    "stock": 30,
+    "download_size": 50.0
+  }
+}
