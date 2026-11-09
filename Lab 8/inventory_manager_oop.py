@@ -1,72 +1,10 @@
 # --- Imports --- #
 import json
-from abc import ABC, abstractmethod
+from physical_product import PhysicalProduct
+from digital_product import DigitalProduct
 
 
 # --- Classes --- #
-class Product(ABC):
-    def __init__(self, product_id, type, name, price, stock):
-        self.__product_id = product_id
-        self.__type = type
-        self.__name = name
-        self.__price = price
-        self.__stock = stock
-
-    def update_stock(self, new_stock):
-        self.__stock = new_stock
-
-    def get_product_info(self):
-        return {
-            "product_id": self.__product_id,
-            "type": self.__type,
-            "name": self.__name,
-            "price": self.__price,
-            "stock": self.__stock,
-        }
-
-    @abstractmethod
-    def get_fulfilment_info(self):
-        pass
-
-
-class CanBeShipped(ABC):
-    @abstractmethod
-    def calculate_shipping_cost(self):
-        pass
-
-
-class PhysicalProduct(Product, CanBeShipped):
-    def __init__(self, product_id, type, name, price, stock, weight):
-        super().__init__(product_id, type, name, price, stock)
-        self.__weight = weight
-
-    def display_information(self):
-        product_info = super().get_product_info()
-        product_info["weight"] = self.__weight
-        return product_info
-
-    def get_fulfilment_info(self):
-        return f"This product requires physical shipping."
-
-    def calculate_shipping_cost(self):
-        shipping_cost_per_kg = 5.0  # Example shipping cost per kg
-        return self.__weight * shipping_cost_per_kg
-
-
-class DigitalProduct(Product):
-    def __init__(self, product_id, type, name, price, stock, download_size):
-        super().__init__(product_id, type, name, price, stock)
-        self.__download_size = download_size
-
-    def display_information(self):
-        product_info = super().get_product_info()
-        product_info["download_size"] = self.__download_size
-        return product_info
-
-    def get_fulfilment_info(self):
-        return f"This product is delivered digitally."
-
-
 class Inventory:
     def __init__(self):
         self.__inventory = {}
