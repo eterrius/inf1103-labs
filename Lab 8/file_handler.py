@@ -3,15 +3,16 @@ import json
 from physical_product import PhysicalProduct
 from digital_product import DigitalProduct
 from supplier import Supplier
+from inventory import Inventory
 
 
 # --- Classes --- #
 class FileHandler:
-    def __init__(self, inventory, filename="inventory.json"):
+    def __init__(self, inventory: Inventory, filename="inventory.json"):
         self.__filename = filename
         self._inventory = inventory
 
-    def load_inventory(self):
+    def load_inventory(self) -> dict:
         inv_name = self.__filename
 
         try:
@@ -68,7 +69,7 @@ class FileHandler:
             )
             return {}
 
-    def save_inventory(self):
+    def save_inventory(self) -> None:
         inv_name = self.__filename
         inventory_data = self.parse_inventory()
 
@@ -80,7 +81,7 @@ class FileHandler:
         except Exception as e:
             print(f"Error saving inventory: {e}")
 
-    def parse_inventory(self):
+    def parse_inventory(self) -> dict:
         inventory_data = {}
         for product in self._inventory.products:
             product_info = product.display_information()

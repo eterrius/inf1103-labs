@@ -19,14 +19,14 @@ class PhysicalProduct(Product, CanBeShipped):
         super().__init__(product_id, type, name, price, stock, supplier)
         self.__weight = weight
 
-    def display_information(self):
+    def display_information(self) -> dict:
         product_info = super().get_product_info()
         product_info["weight"] = self.__weight
         return product_info
 
-    def get_fulfilment_info(self):
+    def get_fulfilment_info(self) -> str:
         return f"This product requires physical shipping."
 
-    def calculate_shipping_cost(self):
+    def calculate_shipping_cost(self) -> float:
         shipping_cost_per_kg = 5.0  # Example shipping cost per kg
         return self.__weight * shipping_cost_per_kg

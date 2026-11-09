@@ -18,10 +18,10 @@ class DigitalProduct(Product):
         super().__init__(product_id, type, name, price, stock, supplier)
         self.__download_size = download_size
 
-    def display_information(self):
+    def display_information(self) -> dict:
         product_info = super().get_product_info()
         product_info["download_size"] = self.__download_size
         return product_info
 
-    def get_fulfilment_info(self):
+    def get_fulfilment_info(self) -> str:
         return f"This product is delivered digitally."

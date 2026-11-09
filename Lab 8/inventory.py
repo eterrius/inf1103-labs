@@ -27,7 +27,7 @@ class Inventory:
         else:
             print(f"\nProduct with ID {product_id} not found in the inventory.\n")
 
-    def display_all(self):
+    def display_all(self) -> None:
         if not self.products:
             print("\nInventory is empty.\n")
             return
@@ -79,7 +79,7 @@ class Inventory:
         print("\nProduct not found. \n")
         return None
 
-    def keys(self):
+    def keys(self) -> list[str]:
         # return a list of product IDs in the inventory
         return [
             product.display_information()["product_id"] for product in self.products

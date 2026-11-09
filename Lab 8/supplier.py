@@ -5,7 +5,7 @@ class Supplier:
         self.__name = name
         self.__contact_email = contact_email
 
-    def display_information(self):
+    def display_information(self) -> dict:
         return {
             "supplier_id": self.__supplier_id,
             "name": self.__name,

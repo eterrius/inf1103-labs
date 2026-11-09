@@ -22,10 +22,10 @@ class Product(ABC):
 
         self.supplier: Supplier = supplier
 
-    def update_stock(self, new_stock):
+    def update_stock(self, new_stock: int) -> None:
         self.__stock = new_stock
 
-    def get_product_info(self):
+    def get_product_info(self) -> dict:
         return {
             "product_id": self.__product_id,
             "type": self.__type,
@@ -36,5 +36,5 @@ class Product(ABC):
         }
 
     @abstractmethod
-    def get_fulfilment_info(self):
+    def get_fulfilment_info(self) -> str:
         pass
