@@ -1,101 +1,18 @@
 # --- Imports --- #
-import json
-from products import PhysicalProduct, DigitalProduct, ProductFactory
-from supplier import Supplier
+from abc import ABC, abstractmethod
 from inventory import Inventory
 
 
 # --- Classes --- #
-class FileHandler:
-    def __init__(self, inventory: Inventory, filename="inventory.json"):
+class FileHandler(ABC):
+    def __init__(self, inventory: Inventory, filename: str):
         self.__filename = filename
         self._inventory = inventory
 
+    @abstractmethod
     def load_inventory(self) -> dict:
-        inv_name = self.__filename
+        pass
 
-        try:
-            with open(inv_name, "r") as file:
-                print(f"{inv_name} found.")
-                inventory = json.load(file)
-
-            for product_id, product_data in inventory.items():
-                supplier_data = product_data.get("supplier", {})
-                supplier = Supplier(
-                    supplier_data.get("supplier_id", ""),
-                    supplier_data.get("name", ""),
-                    supplier_data.get("contact_email", ""),
-                )
-
-                if product_data["type"] == "physical":
-                    product_weight_or_size = product_data.get(
-                        "weight", 0
-                    )  # Default weight to 0 if not present
-
-                elif product_data["type"] == "digital":
-                    product_weight_or_size = product_data.get(
-                        "download_size", 0
-                    )  # Default download size to 0 if not present
-
-                product = ProductFactory.create(
-                    product_id,
-                    product_data["type"],
-                    product_data["name"],
-                    product_data["price"],
-                    product_data["stock"],
-                    product_weight_or_size,
-                    supplier,
-                )
-
-                self._inventory.add_product(product)
-
-            print("Inventory loaded successfully.")
-            return inventory
-
-        except FileNotFoundError:
-            print("Inventory file not found. Starting with an empty inventory.")
-            return {}
-
-        except (json.JSONDecodeError, KeyError):
-            print(
-                "Error decoding JSON, file may be empty or corrupted. Starting with an empty inventory."
-            )
-            return {}
-
-        finally:
-            print("Inventory loading process completed.")
-
+    @abstractmethod
     def save_inventory(self) -> None:
-        inv_name = self.__filename
-        inventory_data = self.parse_inventory()
-
-        try:
-            with open(inv_name, "w") as file:
-                file.write(json.dumps(inventory_data, indent=2))
-                print("Inventory saved successfully.")
-
-        except Exception as e:
-            print(f"Error saving inventory: {e}")
-
-    def parse_inventory(self) -> dict:
-        inventory_data = {}
-        for product in self._inventory.products:
-            product_info = product.display_information()
-            product_id = product_info["product_id"]
-
-            inventory_data[product_id] = {
-                "type": product_info["type"],
-                "name": product_info["name"],
-                "price": product_info["price"],
-                "stock": product_info["stock"],
-                "supplier": product_info["supplier"],
-            }
-
-            if product_info["type"] == "physical":
-                inventory_data[product_id]["weight"] = product_info.get("weight", 0)
-            elif product_info["type"] == "digital":
-                inventory_data[product_id]["download_size"] = product_info.get(
-                    "download_size", 0
-                )
-
-        return inventory_data
+        pass
