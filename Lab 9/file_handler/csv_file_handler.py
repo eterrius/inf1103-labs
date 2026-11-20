@@ -8,7 +8,7 @@ from products import ProductFactory
 # --- Classes --- #
 class CSVFileHandler(FileHandler):
     def __init__(self, inventory: Inventory, filename: str = "inventory.csv"):
-        super().__init__(inventory)
+        super().__init__(inventory, filename)
         self.__filename = filename
 
     def load_inventory(self) -> dict:
@@ -63,3 +63,40 @@ class CSVFileHandler(FileHandler):
 
         finally:
             print("Load attempt finished.")
+
+    def save_inventory(self) -> None:
+        try:
+            file = open(self.__filename, mode="w", newline="")
+
+        except Exception as e:
+            print(f"Error opening file {self.__filename} for writing: {e}")
+
+        else:
+            with file:
+                writer = csv.DictWriter(
+                    file,
+                    fieldnames=[
+                        "product_id",
+                        "product_type",
+                        "name",
+                        "price",
+                        "stock_quantity",
+                    ],
+                )
+                writer.writeheader()
+                for product in self._inventory.get_all_products():
+                    product_info = product.get_product_info()
+                    writer.writerow(
+                        {
+                            "product_id": product_info["product_id"],
+                            "product_type": product_info["type"],
+                            "name": product_info["name"],
+                            "price": product_info["price"],
+                            "stock_quantity": product_info["stock"],
+                        }
+                    )
+
+            print(f"Inventory saved to {self.__filename}.")
+
+        finally:
+            print("Save attempt finished.")
