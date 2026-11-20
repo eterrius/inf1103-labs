@@ -90,7 +90,7 @@ class CSVFileHandler(FileHandler):
                     ],
                 )
                 writer.writeheader()
-                for product in self._inventory.get_all_products():
+                for product in self._inventory.products:
                     product_info = product.get_product_info()
                     writer.writerow(
                         {
