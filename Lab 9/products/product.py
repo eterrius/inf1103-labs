@@ -38,3 +38,15 @@ class Product(ABC):
     @abstractmethod
     def get_fulfilment_info(self) -> str:
         pass
+
+    def validate_stock(self) -> bool:
+        if self.__stock < 0:
+            raise ValueError(
+                f"Invalid quantity for product {self.product.get_product_info()['name']}. Quantity must be greater than 0."
+            )
+
+    def validate_price(self) -> bool:
+        if self.__price <= 0:
+            raise ValueError(
+                f"Invalid price for product {self.product.get_product_info()['name']}. Price must be greater than 0."
+            )

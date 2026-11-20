@@ -10,3 +10,14 @@ class OrderLine:
 
     def calculate_subtotal(self) -> float:
         return self.product.get_product_info()["price"] * self.quantity
+
+    def validate_quantity(self) -> bool:
+        if self.quantity <= 0:
+            raise ValueError(
+                f"Invalid quantity for product {self.product.get_product_info()['name']}. Quantity must be greater than 0."
+            )
+
+        if self.quantity > self.product.get_product_info()["stock"]:
+            raise ValueError(
+                f"Insufficient stock for product {self.product.get_product_info()['name']}. Available stock: {self.product.get_product_info()['stock']}."
+            )
