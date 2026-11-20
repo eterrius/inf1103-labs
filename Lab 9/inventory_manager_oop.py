@@ -1,9 +1,8 @@
 # --- Imports --- #
 from products import Product, ProductFactory
 from inventory import Inventory
-from file_handlers import FileHandler
+from file_handlers import FileHandler, CSVFileHandler
 from supplier import Supplier
-from order import Order
 
 
 # --- Classes --- #
@@ -206,5 +205,7 @@ class Main:
 
 # --- Main Program --- #
 if __name__ == "__main__":
-    main_program = Main()
+    main_program = Main(
+        CSVFileHandler, "products.csv"
+    )  # You can change the filename as needed
     main_program.run()
