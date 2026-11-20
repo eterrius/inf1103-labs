@@ -1,5 +1,5 @@
 # --- Imports --- #
-from product import Product
+from .product import Product
 from supplier import Supplier
 
 

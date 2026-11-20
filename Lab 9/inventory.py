@@ -1,5 +1,5 @@
 # --- Imports --- #
-from product import Product, PhysicalProduct, DigitalProduct
+from products import Product, PhysicalProduct, DigitalProduct
 
 
 # --- Classes --- #

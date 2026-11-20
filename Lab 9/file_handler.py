@@ -1,7 +1,6 @@
 # --- Imports --- #
 import json
-from physical_product import PhysicalProduct
-from digital_product import DigitalProduct
+from products import PhysicalProduct, DigitalProduct
 from supplier import Supplier
 from inventory import Inventory
 

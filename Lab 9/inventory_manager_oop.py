@@ -1,5 +1,5 @@
 # --- Imports --- #
-from product import Product, PhysicalProduct, DigitalProduct
+from products import Product, PhysicalProduct, DigitalProduct
 from inventory import Inventory
 from file_handler import FileHandler
 from supplier import Supplier
