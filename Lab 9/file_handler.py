@@ -1,6 +1,6 @@
 # --- Imports --- #
 import json
-from products import PhysicalProduct, DigitalProduct
+from products import PhysicalProduct, DigitalProduct, ProductFactory
 from supplier import Supplier
 from inventory import Inventory
 
@@ -28,30 +28,24 @@ class FileHandler:
                 )
 
                 if product_data["type"] == "physical":
-                    product = PhysicalProduct(
-                        product_id,
-                        product_data["type"],
-                        product_data["name"],
-                        product_data["price"],
-                        product_data["stock"],
-                        product_data.get(
-                            "weight", 0
-                        ),  # Default weight to 0 if not present
-                        supplier,
-                    )
+                    product_weight_or_size = product_data.get(
+                        "weight", 0
+                    )  # Default weight to 0 if not present
 
                 elif product_data["type"] == "digital":
-                    product = DigitalProduct(
-                        product_id,
-                        product_data["type"],
-                        product_data["name"],
-                        product_data["price"],
-                        product_data["stock"],
-                        product_data.get(
-                            "download_size", 0
-                        ),  # Default download size to 0 if not present
-                        supplier,
-                    )
+                    product_weight_or_size = product_data.get(
+                        "download_size", 0
+                    )  # Default download size to 0 if not present
+
+                product = ProductFactory.create(
+                    product_id,
+                    product_data["type"],
+                    product_data["name"],
+                    product_data["price"],
+                    product_data["stock"],
+                    product_weight_or_size,
+                    supplier,
+                )
 
                 self._inventory.add_product(product)
 

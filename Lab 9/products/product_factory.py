@@ -14,16 +14,16 @@ class ProductFactory:
         name: str,
         price: float,
         stock: int,
-        weight: float,
+        weight_or_size: float,
         supplier: Supplier,
     ) -> Product:
         if type == "physical":
             return PhysicalProduct(
-                product_id, type, name, price, stock, weight, supplier
+                product_id, type, name, price, stock, weight_or_size, supplier
             )
         elif type == "digital":
             return DigitalProduct(
-                product_id, type, name, price, stock, weight, supplier
+                product_id, type, name, price, stock, weight_or_size, supplier
             )
         else:
             raise ValueError(f"Unknown product type: {type}")

@@ -1,5 +1,5 @@
 # --- Imports --- #
-from products import Product, PhysicalProduct, DigitalProduct
+from products import Product, ProductFactory
 from inventory import Inventory
 from file_handler import FileHandler
 from supplier import Supplier
@@ -99,47 +99,38 @@ class Main:
         if product_id not in self.__inventory.keys():
             product_type = self.input_product_type()
 
+            product_name = self.get_valid_input("product_name", input("Product Name: "))
+            product_price = self.get_valid_input(
+                "product_price", input("Product Price: ")
+            )
+            product_stock = self.get_valid_input(
+                "product_stock", input("Product Stock: ")
+            )
+            product_supplier = Supplier(
+                supplier_id=input("Supplier ID: "),
+                name=input("Supplier Name: "),
+                contact_email=input("Supplier Contact Email: "),
+            )
+
             if product_type == "physical":
-                product = PhysicalProduct(
-                    product_id=product_id,
-                    type="physical",
-                    name=self.get_valid_input("product_name", input("Product Name: ")),
-                    price=self.get_valid_input(
-                        "product_price", input("Product Price: ")
-                    ),
-                    stock=self.get_valid_input(
-                        "product_stock", input("Product Stock: ")
-                    ),
-                    weight=self.get_valid_input(
-                        "product_weight", input("Product Weight (kg): ")
-                    ),
-                    supplier=Supplier(
-                        supplier_id=input("Supplier ID: "),
-                        name=input("Supplier Name: "),
-                        contact_email=input("Supplier Contact Email: "),
-                    ),
+                product_weight_or_size = self.get_valid_input(
+                    "product_weight", input("Product Weight (kg): ")
                 )
 
             elif product_type == "digital":
-                product = DigitalProduct(
-                    product_id=product_id,
-                    type="digital",
-                    name=self.get_valid_input("product_name", input("Product Name: ")),
-                    price=self.get_valid_input(
-                        "product_price", input("Product Price: ")
-                    ),
-                    stock=self.get_valid_input(
-                        "product_stock", input("Product Stock: ")
-                    ),
-                    download_size=self.get_valid_input(
-                        "product_download_size", input("Product Download Size (MB): ")
-                    ),
-                    supplier=Supplier(
-                        supplier_id=input("Supplier ID: "),
-                        name=input("Supplier Name: "),
-                        contact_email=input("Supplier Contact Email: "),
-                    ),
+                product_weight_or_size = self.get_valid_input(
+                    "product_download_size", input("Product Download Size (MB): ")
                 )
+
+            product = ProductFactory.create(
+                product_id=product_id,
+                type=product_type,
+                name=product_name,
+                price=product_price,
+                stock=product_stock,
+                weight_or_size=product_weight_or_size,
+                supplier=product_supplier,
+            )
 
             self.__inventory.add_product(product=product)
 
