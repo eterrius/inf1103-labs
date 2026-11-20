@@ -3,7 +3,7 @@ import json
 from products import PhysicalProduct, DigitalProduct, ProductFactory
 from supplier import Supplier
 from inventory import Inventory
-from file_handler import FileHandler
+from .file_handler import FileHandler
 
 
 # --- Classes --- #
