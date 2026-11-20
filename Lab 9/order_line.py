@@ -8,6 +8,8 @@ class OrderLine:
         self.product = product
         self.quantity = quantity
 
+        self.validate_quantity()
+
     def calculate_subtotal(self) -> float:
         return self.product.get_product_info()["price"] * self.quantity
 

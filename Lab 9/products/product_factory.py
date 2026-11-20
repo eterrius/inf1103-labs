@@ -18,12 +18,18 @@ class ProductFactory:
         supplier: Supplier,
     ) -> Product:
         if type == "physical":
-            return PhysicalProduct(
+            product = PhysicalProduct(
                 product_id, type, name, price, stock, weight_or_size, supplier
             )
         elif type == "digital":
-            return DigitalProduct(
+            product = DigitalProduct(
                 product_id, type, name, price, stock, weight_or_size, supplier
             )
+
         else:
             raise ValueError(f"Unknown product type: {type}")
+
+        product.validate_price()
+        product.validate_stock()
+
+        return product

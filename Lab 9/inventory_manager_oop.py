@@ -1,16 +1,17 @@
 # --- Imports --- #
 from products import Product, ProductFactory
 from inventory import Inventory
-from file_handler import FileHandler
+from file_handlers import FileHandler
 from supplier import Supplier
 from order import Order
 
 
 # --- Classes --- #
 class Main:
-    def __init__(self):
+    def __init__(self, file_handler: FileHandler, filename: str = "products.csv"):
         self.__inventory = Inventory()
-        self.__handler = FileHandler(self.__inventory)
+        self.__filename = filename
+        self.__handler = file_handler(self.__inventory, self.__filename)
 
         self.__options = {
             "1": self.__inventory.display_all,

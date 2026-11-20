@@ -74,7 +74,7 @@ class CSVFileHandler(FileHandler):
         try:
             file = open(self.__filename, mode="w", newline="")
 
-        except Exception as e:
+        except (FileNotFoundError, PermissionError, IOError) as e:
             print(f"Error opening file {self.__filename} for writing: {e}")
 
         else:

@@ -75,7 +75,7 @@ class JSONFileHandler(FileHandler):
                 file.write(json.dumps(inventory_data, indent=2))
                 print("Inventory saved successfully.")
 
-        except Exception as e:
+        except (PermissionError, IOError, OSError) as e:
             print(f"Error saving inventory: {e}")
 
     def parse_inventory(self) -> dict:
