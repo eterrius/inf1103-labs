@@ -3,6 +3,7 @@ import csv
 from .file_handler import FileHandler
 from inventory import Inventory
 from products import ProductFactory
+from supplier import Supplier
 
 
 # --- Classes --- #
@@ -24,26 +25,29 @@ class CSVFileHandler(FileHandler):
                 reader = csv.DictReader(
                     file,
                     fieldnames=[
-                        "product_id",
                         "product_type",
+                        "product_id",
                         "name",
                         "price",
                         "stock_quantity",
                     ],
                 )
+                next(reader)  # Skip the header row
                 for row in reader:
-                    product_id = row["product_id"]
-                    product_type = row["product_type"]
-                    product_name = row["name"]
-                    product_price = float(row["price"])
-                    product_stock = int(row["stock_quantity"])
-
-                    # if product_type == "physical":
-                    #     product_weight_or_size = float(row.get("weight", 0))
-                    # elif product_type == "digital":
-                    #     product_weight_or_size = float(row.get("download_size", 0))
-
                     try:
+                        product_id = row["product_id"]
+                        product_type = row["product_type"]
+                        product_name = row["name"]
+                        product_price = float(row["price"])
+                        product_stock = int(row["stock_quantity"])
+
+                        product_weight_or_size = 0.0  # Default value if type is unknown
+                        supplier = Supplier(
+                            supplier_id=row.get("supplier_id", ""),
+                            name=row.get("supplier_name", ""),
+                            contact_email=row.get("supplier_contact_email", ""),
+                        )
+
                         self._inventory.add_product(
                             ProductFactory.create(
                                 product_id,
@@ -51,9 +55,11 @@ class CSVFileHandler(FileHandler):
                                 product_name,
                                 product_price,
                                 product_stock,
-                                # product_weight_or_size,
+                                product_weight_or_size,
+                                supplier,
                             )
                         )
+
                         loaded += 1
 
                     except ValueError as e:
