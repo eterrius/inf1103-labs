@@ -1,7 +1,5 @@
 # --- Imports --- #
-from product import Product
-from physical_product import PhysicalProduct
-from digital_product import DigitalProduct
+from product import Product, PhysicalProduct, DigitalProduct
 
 
 # --- Classes --- #
@@ -23,7 +21,9 @@ class Inventory:
 
         if product_to_remove:
             self.products.remove(product_to_remove)
-            print(f"\nProduct with ID {product_id} has been removed from the inventory.\n")
+            print(
+                f"\nProduct with ID {product_id} has been removed from the inventory.\n"
+            )
         else:
             print(f"\nProduct with ID {product_id} not found in the inventory.\n")
 
