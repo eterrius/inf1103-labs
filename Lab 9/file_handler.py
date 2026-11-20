@@ -62,6 +62,9 @@ class FileHandler:
             )
             return {}
 
+        finally:
+            print("Inventory loading process completed.")
+
     def save_inventory(self) -> None:
         inv_name = self.__filename
         inventory_data = self.parse_inventory()
