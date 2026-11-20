@@ -1,0 +1,29 @@
+# --- Imports --- #
+from .digital_product import DigitalProduct
+from .physical_product import PhysicalProduct
+from .product import Product
+from supplier import Supplier
+
+
+# --- Classes --- #
+class ProductFactory:
+    @staticmethod
+    def create(
+        product_id: str,
+        type: str,
+        name: str,
+        price: float,
+        stock: int,
+        weight: float,
+        supplier: Supplier,
+    ) -> Product:
+        if type == "physical":
+            return PhysicalProduct(
+                product_id, type, name, price, stock, weight, supplier
+            )
+        elif type == "digital":
+            return DigitalProduct(
+                product_id, type, name, price, stock, weight, supplier
+            )
+        else:
+            raise ValueError(f"Unknown product type: {type}")
